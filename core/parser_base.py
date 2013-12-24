@@ -20,7 +20,7 @@ class Parser(object):
         categories=Category.objects.filter(source=self.source)
         categories.update(updated=False)
         for category in categories:
-            products = category.products
+            products = category.products.all()
             products.update(updated=False)
             for product in products:
                 product.params.update(updated=False)
@@ -38,16 +38,18 @@ class Parser(object):
         return created
     
     def GetProduct(self, product):
+        print product
         category = Category.objects.get(external_id=product['category'])
-        prod_in_base, created = Product.objects.get_or_create(category=category, external_id=product['id'], defaults={name:product['name']})
+        prod_in_base, created = Product.objects.get_or_create(external_id=product['id'], defaults={'name':product['name']})
         if not created:
             prod_in_base.updated = True
             prod_in_base.save()
+        prod_in_base.category.add(category)
         return created
     
     def UpdateParam(self, param):
         product = Product.objects.get(external_id=param['product'])
-        param_in_base, created = Param.objects.get_or_create(product=product, name=param['name'], defaults={value:param['value']})
+        param_in_base, created = Param.objects.get_or_create(product=product, name=param['name'], defaults={'value':param['value']})
         if not created:
             param_in_base.value = param['value']
             param_in_base.updated = True

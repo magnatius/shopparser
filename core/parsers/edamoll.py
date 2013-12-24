@@ -43,9 +43,25 @@ class EdaMollSpider(Spider):
         for product in grab.doc.select('//div[@class="catalog_item"]'):
             item_id = product.select('a').attr('href').split('/')[-1]
             item_name=product.select('.//span[@itemprop="name"]').text()
-            product = {'category':task.url.split('/')[-1], 'id':item_id, 'name':item_name}
+            product = {'category':task.url.split('/')[-2], 'id':item_id, 'name':item_name}
             self.parser.GetProduct(product)
             yield Task('params', url=self.parser.Link+'/item/'+item_id)
+        if grab.doc.select('//a[@class="nav-next"]').count()>0:
+            yield Task('product', url=self.parser.Link+grab.doc.select('//a[@class="nav-next"]').attr('href'))
             
     def task_params(self, grab, task):
+        product = task.url.split('/')[-1]
+        pname = 'image'
+        pval = self.parser.Link+grab.doc.select('//div[@class="catalog-element-image"]/img').attr('src')
+        param={'name':pname, 'value':pval, 'product':product}
+        self.parser.UpdateParam(param);
+        price_item= grab.doc.select('//span[@itemprop="price"]')
+        param = {'name':'price', 'value':(price_item.text()+'.'+price_item.select('span[@class="decimal"]').text()), 'product':product}
+        self.parser.UpdateParam(param);
+        propnames = grab.doc.select('//div[contains(concat(" ", normalize-space(@class), " "), " catalog-element-prop ")]/b[@class="propname"]')[1:]
+        propvalues = grab.doc.select('//div[contains(concat(" ", normalize-space(@class), " "), " catalog-element-prop ")]/span[@class="propval"]')
+        i=0
+        while i<len(propnames):
+            self.parser.UpdateParam({'name':propnames[i].text().strip(), 'value':propvalues[i].text().strip(), 'product':product });
+            i+=1
         
