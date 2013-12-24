@@ -1,0 +1,23 @@
+<div class="results">
+	<table id="result_list">
+	<thead>
+		<th><div class="text"><a href="#">Источник данных</a></div></th>
+		<th><div class="text"><a href="#">URL</a></div></th>
+		<th><div class="text"><a href="#">Дата последней синхронизации</a></div></th>
+		<th><div class="text"><a href="#">Количество потоков</a></div></th>
+		<th></th>
+	</thead>
+	<tbody>
+		{% for source in sources %}
+		
+		<tr>
+			<td>{{ source.title }}</td>
+			<td>{{ source.url }}</td>
+			<td>{%if source.sync_date %} {{source.sync_date}} {%else%} Не синхронизирован{%endif%}</td>
+			<td><input type="text" name="threads_for_{{source.id}}" value="1"></td>
+			<td><button data-sid="{{source.id}}" name="sync_{{source.id}}_btn" class="button sync">Парсить</button></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div>

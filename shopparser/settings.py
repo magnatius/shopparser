@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from os.path import join
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -20,9 +21,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'jm4)4)c@51q9ixha7#qo73rqb!^aaz!=lp_pp$k)-$e%5&o9k='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -38,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'core',
+    'adminex',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -67,7 +69,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
 
@@ -77,11 +79,33 @@ USE_L10N = True
 
 USE_TZ = True
 
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    #     'django.template.loaders.eggs.Loader',
+)
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+TEMPLATE_DIRS = (
+    BASE_DIR + '/templates/',
+)
 
+
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+     BASE_DIR + '/static/',
+)
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
 
 try:
     from local_settings import *
