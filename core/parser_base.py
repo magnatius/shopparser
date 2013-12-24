@@ -7,13 +7,51 @@ from shopparser.settings import BASE_DIR
 class Parser(object):
     Name = 'undefined'
     Link = 'undefined'
-    Source = None
+    
+    def __init__(self, *args, **kwargs):
+        self.source=kwargs['source']
+        super(Parser, self).__init__()
+    
     
     def parse(self, *args, **kwargs):
         pass
     
+    def ResetUpdateFlag(self):
+        categories=Category.objects.filter(source=self.source)
+        categories.update(updated=False)
+        for category in categories:
+            products = category.products
+            products.update(updated=False)
+            for product in products:
+                product.params.update(updated=False)
+        
+    
     def GetCategory(self, category):
-        cat_in_base, created = Category.objects.get_or_create(parent=category.parent, external_id=category.id, source=category.src, defaults={'name':category.name})
+        if category['parent']:
+            parent = Category.objects.get(external_id=category['parent'])
+        else: 
+            parent = None
+        cat_in_base, created = Category.objects.get_or_create(parent=parent, external_id=category['id'], source=category['src'], defaults={'name':category['name']})
+        if not created:
+            cat_in_base.updated=True
+            cat_in_base.save()
+        return created
+    
+    def GetProduct(self, product):
+        category = Category.objects.get(external_id=product['category'])
+        prod_in_base, created = Product.objects.get_or_create(category=category, external_id=product['id'], defaults={name:product['name']})
+        if not created:
+            prod_in_base.updated = True
+            prod_in_base.save()
+        return created
+    
+    def UpdateParam(self, param):
+        product = Product.objects.get(external_id=param['product'])
+        param_in_base, created = Param.objects.get_or_create(product=product, name=param['name'], defaults={value:param['value']})
+        if not created:
+            param_in_base.value = param['value']
+            param_in_base.updated = True
+            param_in_base.save()
         return created
 
 def LoadParsers():

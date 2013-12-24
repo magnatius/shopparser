@@ -19,7 +19,7 @@ class Category(models.Model):
     source = models.ForeignKey(Source, related_name='categories')
     external_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    updated = models.BooleanField(default=False)
+    updated = models.BooleanField(default=True)
     
     class Meta:
         verbose_name = u"Категория"
@@ -27,10 +27,9 @@ class Category(models.Model):
 
 class Product(models.Model):
     category = models.ManyToManyField(Category, related_name='products')
-    source = models.ForeignKey(Source, related_name='products')
     external_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
-    updated = models.BooleanField(default=False)
+    updated = models.BooleanField(default=True)
     
     class Meta:
         verbose_name = u"Товар"
@@ -40,7 +39,7 @@ class Param(models.Model):
     product = models.ForeignKey(Product, related_name='params')
     name = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
-    updated = models.BooleanField(default=False)
+    updated = models.BooleanField(default=True)
     
     class Meta:
         verbose_name = u"Параметр товара"
