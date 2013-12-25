@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'south',
     'core',
     'adminex',
+    'mptt',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 
 class Source(models.Model):
     title = models.CharField(u'Название источника', max_length=255)
@@ -14,7 +15,7 @@ class Source(models.Model):
         verbose_name = u"Источник данных"
         verbose_name_plural = u"Источники данных"
 
-class Category(models.Model):
+class Category(MPTTModel):
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children')
     source = models.ForeignKey(Source, related_name='categories')
     external_id = models.CharField(max_length=255)
