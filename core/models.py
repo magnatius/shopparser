@@ -21,6 +21,9 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     updated = models.BooleanField(default=True)
     
+    def __unicode__(self):
+        return self.name
+    
     class Meta:
         verbose_name = u"Категория"
         verbose_name_plural = u"Категории"
@@ -30,6 +33,9 @@ class Product(models.Model):
     external_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     updated = models.BooleanField(default=True)
+    
+    def __unicode__(self):
+        return self.name
     
     class Meta:
         verbose_name = u"Товар"
@@ -41,6 +47,29 @@ class Param(models.Model):
     value = models.CharField(max_length=255)
     updated = models.BooleanField(default=True)
     
+    def __unicode__(self):
+        return self.name    
+    
     class Meta:
         verbose_name = u"Параметр товара"
         verbose_name_plural = u"Параметры товара"
+
+PROXY_TYPE = ((0,'http'),
+              (1,'socks4'),
+              (2,'socks5'),)
+
+class ProxyServer(models.Model):
+    name = models.CharField(max_length=255)
+    server = models.CharField(max_length=25)
+    port = models.IntegerField()
+    username = models.CharField(max_length=50, blank=True, null=True)
+    password = models.CharField(max_length=50, blank=True, null=True)
+    type = models.IntegerField(choices=PROXY_TYPE, default=0)
+    
+    def __unicode__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = u"Прокси-сервер"
+        verbose_name_plural = u"Прокси-серверы"
+    

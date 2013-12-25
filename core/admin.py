@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from models import Source, Category
+from models import Source, Category, ProxyServer
 
 class SourcesAdmin(admin.ModelAdmin):
     model = Source
@@ -9,3 +9,4 @@ class SourcesAdmin(admin.ModelAdmin):
 
 admin.site.register(Source, SourcesAdmin)
 admin.site.register(Category, admin.ModelAdmin)
+admin.site.register(ProxyServer, admin.ModelAdmin)

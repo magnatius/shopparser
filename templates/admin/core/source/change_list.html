@@ -31,12 +31,35 @@
     $(document).ready(function($) {
         $("tr input.action-select").actions();
         $(".sync").click(function (e) {
-          e.preventDefault();
+          e.preventDefault();          
           var threads = $(this).parent('td').siblings('td').children('input').val();
-          $.get('/parse/'+$(this).data('sid')+'/', {threads:threads}, function(data){
-          	alert('Процесс парсинга запущен');
+          var inputs ={threads:threads};
+          var ptype = $(this).parent('td').siblings('td').children('select.proxy_type').children('option:selected').val();
+          var proxies = [];
+          $(this).parent('td').siblings('td').children('select.proxy_select').children('option:selected').each(function () {
+            proxies.push($(this).val());
+          });
+          if (proxies.length>0) {
+          	inputs['ptype'] = ptype;
+          	inputs['proxies'] = encodeURIComponent('['+proxies.join(',')+']');
+          }
+          
+          $.get('/parse/'+$(this).data('sid')+'/', inputs, function(data){
+          		alert('Процесс парсинга завершен');
           });
         });
+        $('.proxy_type').change(function () {
+        	var _this = this;
+           $.get('/admin/proxy_list/', {type:$(this).children('option:selected').val()}, function (data) {
+              $(_this).siblings('select.proxy_select').empty();
+              data = $.parseJSON(data);
+              for (var i in data){
+              	$(_this).siblings('select.proxy_select').append('<option value='+data[i].pk+'>'+data[i].fields.name+'</option>');
+              }
+              
+           });
+        });
+        
     });
 })(django.jQuery);
 </script>

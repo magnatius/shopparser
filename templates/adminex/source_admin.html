@@ -5,6 +5,7 @@
 		<th><div class="text"><a href="#">URL</a></div></th>
 		<th><div class="text"><a href="#">Дата последней синхронизации</a></div></th>
 		<th><div class="text"><a href="#">Количество потоков</a></div></th>
+		<th><div class="text"><a href="#">Прокси сервера</a></div></th>
 		<th></th>
 	</thead>
 	<tbody>
@@ -15,6 +16,16 @@
 			<td>{{ source.url }}</td>
 			<td>{%if source.sync_date %} {{source.sync_date}} {%else%} Не синхронизирован{%endif%}</td>
 			<td><input type="text" name="threads_for_{{source.id}}" value="1"></td>
+			<td><select class="proxy_type" style="width:100%">
+				<option selected="selected" value="0">HTTP</option>
+				<option value="1">SOCKS4</option>
+				<option value="2">SOCKS5</option>
+			</select><br/>
+				<select class="proxy_select" multiple="true" size="4" style="width:100%">
+	{%for proxy in proxies%}
+	<option value="{{proxy.id}}">{{proxy.name}}</option>
+	{%endfor%}	
+</select></td>
 			<td><button data-sid="{{source.id}}" name="sync_{{source.id}}_btn" class="button sync">Парсить</button></td>
 		</tr>
 		{% endfor %}

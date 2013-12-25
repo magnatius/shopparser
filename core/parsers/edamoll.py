@@ -1,5 +1,6 @@
 from parser_base import Parser
 from grab.spider import Spider, Task
+from grab import Grab
 import logging
 
 class EdaMollParser(Parser):
@@ -10,9 +11,15 @@ class EdaMollParser(Parser):
     def parse(self, *args, **kwargs):
         logging.basicConfig(level=logging.DEBUG)
         link = self.Link
-        self.ResetUpdateFlag()        
+        self.ResetUpdateFlag()
         threads = int(kwargs['threads'])
         spider = EdaMollSpider(thread_number=threads, parser=self)
+        proxy_types = ['http','socks4','socks5']
+        print kwargs
+        if 'proxies' in kwargs:
+            proxies = kwargs['proxies']
+            print proxies
+            spider.load_proxylist(source=proxies, source_type='list', proxy_type=proxy_types[int(kwargs['ptype'])])
         spider.run()
 
 
