@@ -41,6 +41,8 @@ INSTALLED_APPS = (
     'core',
     'adminex',
     'mptt',
+    'export_xls',
+    'feincms',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -4,3 +4,5 @@ grab==0.4.13
 lxml==3.2.4
 pycurl==7.19.0.3
 django-mptt==0.6.0
+django-export-xls==0.1.1
+FeinCMS==1.9.1
