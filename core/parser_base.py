@@ -9,7 +9,8 @@ class Parser(object):
     Link = 'undefined'
     
     def __init__(self, *args, **kwargs):
-        self.source=kwargs['source']
+        if 'source' in kwargs:
+            self.source=kwargs['source']
         super(Parser, self).__init__()
     
     

@@ -63,7 +63,7 @@ class EdaMollSpider(Spider):
         param={'name':pname, 'value':pval, 'product':product}
         self.parser.UpdateParam(param);
         price_item= grab.doc.select('//span[@itemprop="price"]')
-        param = {'name':'price', 'value':(price_item.text()+'.'+price_item.select('span[@class="decimal"]').text()), 'product':product}
+        param = {'name':'price', 'value':str(float(price_item.text())/100), 'product':product}
         self.parser.UpdateParam(param);
         propnames = grab.doc.select('//div[contains(concat(" ", normalize-space(@class), " "), " catalog-element-prop ")]/b[@class="propname"]')[1:]
         propvalues = grab.doc.select('//div[contains(concat(" ", normalize-space(@class), " "), " catalog-element-prop ")]/span[@class="propval"]')
