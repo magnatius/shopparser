@@ -25,7 +25,12 @@ class Parser(object):
             products.update(updated=False)
             for product in products:
                 product.params.update(updated=False)
-        
+    
+    def CleanDeleted(self):
+        categories = Category.objects.filter(source=self.source).filter(updated=False)
+        categories.delete()
+        products = Product.objects.select_related().filter(category__source=self.source).filter(updated=False)
+        products.delete()
     
     def GetCategory(self, category):
         if category['parent']:
@@ -39,7 +44,6 @@ class Parser(object):
         return created
     
     def GetProduct(self, product):
-        print product
         category = Category.objects.get(external_id=product['category'])
         prod_in_base, created = Product.objects.get_or_create(external_id=product['id'], defaults={'name':product['name']})
         if not created:

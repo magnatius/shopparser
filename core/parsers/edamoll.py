@@ -9,16 +9,16 @@ class EdaMollParser(Parser):
     Source = None
     
     def parse(self, *args, **kwargs):
-        logging.basicConfig(level=logging.DEBUG)
+        logger = logging.getLogger('grab')
+        logger.addHandler(logging.StreamHandler())
+        logger.setLevel(logging.DEBUG)        
         link = self.Link
         self.ResetUpdateFlag()
         threads = int(kwargs['threads'])
         spider = EdaMollSpider(thread_number=threads, parser=self)
         proxy_types = ['http','socks4','socks5']
-        print kwargs
         if 'proxies' in kwargs:
             proxies = kwargs['proxies']
-            print proxies
             spider.load_proxylist(source=proxies, source_type='list', proxy_type=proxy_types[int(kwargs['ptype'])])
         spider.run()
 
@@ -39,7 +39,6 @@ class EdaMollSpider(Spider):
             self.parser.GetCategory(category)
             for parent_elem in root_elem.select('following-sibling::ul/li/a[@class="parent"]'):
                 category={'parent':root_elem.attr('href')[1:-1], 'id':parent_elem.attr('href')[1:-1], 'src':self.parser.source, 'name': parent_elem.text().strip()}    
-                
                 self.parser.GetCategory(category)
                 for elem in parent_elem.select('following-sibling::ul/li/a'):
                     category={'parent':parent_elem.attr('href')[1:-1], 'id':elem.attr('href')[1:-1], 'src':self.parser.source, 'name': elem.text().strip()}
@@ -71,4 +70,5 @@ class EdaMollSpider(Spider):
         while i<len(propnames):
             self.parser.UpdateParam({'name':propnames[i].text().strip(), 'value':propvalues[i].text().strip(), 'product':product });
             i+=1
+        self.parser.CleanDeleted()
         

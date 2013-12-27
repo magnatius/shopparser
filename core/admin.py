@@ -8,6 +8,10 @@ from django.http import HttpResponse
 class SourcesAdmin(admin.ModelAdmin):
     model = Source
 
+class ProductInLine(admin.TabularInline):
+	model=Product.category.through
+	extra=0
+
 class ParentFilter(admin.SimpleListFilter):
     title = u'Родительская категория'
 
@@ -34,6 +38,7 @@ class CategoryAdmin(tree_editor.TreeEditor):
     actions = ['export_xls', 'export_csv']
     list_filter = (ParentFilter,)
     list_per_page = Category.objects.count()
+    inlines = [ProductInLine]
     
     def export_xls(self, request, queryset):
         from export_xls.views import export_xlwt
@@ -54,8 +59,15 @@ class CategoryAdmin(tree_editor.TreeEditor):
         return response
     export_csv.short_description = u"Экспорт в CSV"
 
+class ParamInLine(admin.TabularInline):
+	model=Param
+	extra=0
+
+class ProductAdmin(admin.ModelAdmin):
+	model = Product
+	inlines = [ParamInLine]
+	
 admin.site.register(Source, SourcesAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Product, admin.ModelAdmin)
-admin.site.register(Param, admin.ModelAdmin)
+admin.site.register(Product, ProductAdmin)
 admin.site.register(ProxyServer, admin.ModelAdmin)
