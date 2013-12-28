@@ -13,6 +13,8 @@ import os
 from os.path import join
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+import djcelery
+djcelery.setup_loader()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -43,7 +45,16 @@ INSTALLED_APPS = (
     'mptt',
     'export_xls',
     'feincms',
+    'djcelery'
 )
+
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+
+BROKER_HOST = "localhost"
+BROKER_PORT = 5672
+BROKER_USER = "admin"
+BROKER_PASSWORD = "admin"
+BROKER_VHOST = "mqhost"
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -13,7 +13,6 @@ class Parser(object):
             self.source=kwargs['source']
         super(Parser, self).__init__()
     
-    
     def parse(self, *args, **kwargs):
         pass
     
@@ -66,7 +65,7 @@ def LoadParsers():
     sys.path.append(BASE_DIR+'/core')
     sys.path.append(BASE_DIR+'/core/parsers')
     for file in files:
-        if os.path.splitext(file)[1]=='.py':
+        if os.path.splitext(file)[1]=='.py' and file!='__init__.py':
             mod = importlib.import_module(os.path.splitext(file)[0])
             globals().update({name: getattr(mod, name) for name, obj in inspect.getmembers(mod)})
     for parser in Parser.__subclasses__():

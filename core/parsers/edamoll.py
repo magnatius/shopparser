@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from parser_base import Parser
 from grab.spider import Spider, Task
 from grab import Grab
